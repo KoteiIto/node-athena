@@ -55,7 +55,7 @@ var credentials = {
 | Property  | Default   | Description |
 |-----------|-----------|-------------|
 | bucketUrl      | __Required__ | URI of s3 bucket|
-| pollinInterval      | 500  |  Interval of polling sql results (ms) |
+| pollingInterval      | 500  |  Interval of polling sql results (ms) |
 | queryTimeout      | 0      | Timeout of query execution.  `0` is no timeout |
 | format | 'array' | If `'array'`, the result of the query is as the following `[ { _col0: '1' } , { _col0: '2' }]` . If `'raw'`,  the  result of query is same with `aws-sdk`  |
 

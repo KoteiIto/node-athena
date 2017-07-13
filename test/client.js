@@ -224,6 +224,7 @@ describe('Array', function() {
          it('should return error when fail to stop query (promise)', function(done) {
             new Promise(resolve => {
                 let mockReqest = getMockRequest()
+                mockReqest.checkQuery = runningCheckQuery
                 mockReqest.stopQuery = failStopQuery
                 let client = Client.create(mockReqest, Object.assign(config, {queryTimeout: 10, pollinInterval: 5000}))
                 client.execute('query').catch(err => {
@@ -235,6 +236,7 @@ describe('Array', function() {
 
         it('should return error when fail to stop query (callback)', function(done) {
             let mockReqest = getMockRequest()
+            mockReqest.checkQuery = runningCheckQuery
             mockReqest.stopQuery = failStopQuery
             let client = Client.create(mockReqest, Object.assign(config, {queryTimeout: 10, pollinInterval: 5000}))
             client.execute('query', {}, (err, data) => {
