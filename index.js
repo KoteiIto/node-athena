@@ -6,7 +6,7 @@ const Client = require('./lib/client')
 
 exports.Client = (credentials, config) => {
     config = config || {}
-    AWS.configUpdate(credentials)
+    AWS.config.update(credentials)
     let athena = new AWS.Athena({apiVersion: '2017-05-18'})
     let request = Request.create(athena)
     return Client.create(request, config)

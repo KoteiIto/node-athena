@@ -1,8 +1,8 @@
-athena - a nodejs simple aws athena client
+athena-client - a nodejs simple aws athena client
 ===========================
 Install with:
 
-    npm install athena
+    npm install athena-client
 
 ## Usage Example
 
@@ -16,8 +16,8 @@ var config = {
     bucketUri = 's3://bucketname'
 }
 
-var Athena = require("athena")
-var client = Athena.client(credentials, config)
+var Athena = require("athena-client")
+var client = Athena.Client(credentials, config)
 
 client.execute('SELECT 1', function(err, data)) {
     if (err) {
@@ -35,7 +35,7 @@ client.execute('SELECT 1').then(function(data) {
 ```
 
 # API
-### athena = require("athena")
+### athena = require("athena-client")
 This module exposes the `Client` method, which execute query to AWS Athena
 
 ### client = athena.Client([_credentials_], [_config_])
