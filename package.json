@@ -1,0 +1,27 @@
+{
+  "name": "athena",
+  "version": "0.0.1",
+  "description": "a nodejs simple aws athena client",
+  "homepage": "https://github.com/KoteiIto/node-athena",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:KoteiIto/node-athena.git"
+  },
+  "main": "index.js",
+  "scripts": {
+    "test": "./node_modules/mocha/bin/mocha"
+  },
+  "keywords": [
+    "amazon",
+    "aws",
+    "athena"
+  ],
+  "author": "KoteiIto",
+  "dependencies": {
+    "aws-sdk": "^2.82.0",
+    "co": "^4.6.0"
+  },
+  "devDependencies": {
+    "mocha": "^3.4.2"
+  }
+}
