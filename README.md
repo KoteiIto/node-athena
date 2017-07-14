@@ -13,19 +13,19 @@ var credentials = {
     region: 'xxxx',
 }
 var config = {
-    bucketUri = 's3://bucketname'
+    bucketUri: 's3://xxxx'
 }
-
+ 
 var Athena = require("athena-client")
 var client = Athena.Client(credentials, config)
-
-client.execute('SELECT 1', function(err, data)) {
+ 
+client.execute('SELECT 1', function(err, data) {
     if (err) {
         return console.error(err)
     }
     console.log(data)
 })
-
+ 
 // You can also execute query with promises
 client.execute('SELECT 1').then(function(data) {
     console.log(data)
@@ -70,14 +70,14 @@ var options = {
 ```
 
 ```javascript
-client.execute('SELECT 1', function(err, data)) {
+client.execute('SELECT 1', function(err, data) {
     if (err) {
         return console.error(err)
     }
     console.log(data)
 })
 
-client.execute('SELECT 1', {timeout: 3000}, function(err, data)) {
+client.execute('SELECT 1', {timeout: 3000}, function(err, data) {
     if (err) {
         return console.error(err)
     }
