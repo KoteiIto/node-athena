@@ -129,6 +129,17 @@ describe('Array', function() {
             })
         })
 
+        it('should return success when success to execute query not option (callback)', function(done) {
+            let mockReqest = getMockRequest()
+            let client = Client.create(mockReqest, config)
+            client.execute('query', (err, data) => {
+                assert.equal(err, null)
+                assert.equal(data[0].col1, '1')
+                assert.equal(data[0].col2, '2')
+                done()
+            })
+        })
+
         it('should return error when fail to start query (promise)', function(done) {
             new Promise(resolve => {
                 let mockReqest = getMockRequest()

@@ -59,7 +59,7 @@ var credentials = {
 | queryTimeout      | 0      | Timeout of query execution.  `0` is no timeout |
 | format | 'array' | If `'array'`, the result of the query is as the following `[ { _col0: '1' } , { _col0: '2' }]` . If `'raw'`,  the  result of query is same with `aws-sdk`  |
 
-### client.execute([_query_], [_options_])
+### client.execute([_query_], [_options_], [_callback_])
 Returns query result. The _options_ can be specified as an object with `timeout` and `format` members  such as the following:
 
 ```javascript
@@ -67,4 +67,27 @@ var options = {
     timeout: 3000,
     format: 'raw',
 }
+```
+
+```javascript
+client.execute('SELECT 1', function(err, data)) {
+    if (err) {
+        return console.error(err)
+    }
+    console.log(data)
+})
+
+client.execute('SELECT 1', {timeout: 3000}, function(err, data)) {
+    if (err) {
+        return console.error(err)
+    }
+    console.log(data)
+})
+
+client.execute('SELECT 1').then(function(data) {
+    console.log(data)
+}).catch(function(err) {
+    console.error(err)
+})
+
 ```
