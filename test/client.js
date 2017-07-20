@@ -72,10 +72,10 @@ const successGetQueryResults = (query, options, callback) => {
         ResultSet: {
             Rows: [
                 {
-                    Data: [{VarCharValue: 'col1'}, {VarCharValue: 'col2'}],
+                    Data: [{ VarCharValue: 'col1' }, { VarCharValue: 'col2' }],
                 },
                 {
-                    Data: [{VarCharValue: '1'}, {VarCharValue: '2'}]
+                    Data: [{ VarCharValue: '1' }, { VarCharValue: '2' }]
                 }
             ]
         }
@@ -104,9 +104,9 @@ function getMockRequest() {
     return mock
 }
 
-describe('Array', function() {
-    describe('#execute()', function() {
-        it('should return success when success to execute query (promise)', function(done) {
+describe('Array', function () {
+    describe('#execute()', function () {
+        it('should return success when success to execute query (promise)', function (done) {
             new Promise(resolve => {
                 let mockReqest = getMockRequest()
                 let client = Client.create(mockReqest, config)
@@ -118,7 +118,7 @@ describe('Array', function() {
             }).then(done)
         })
 
-        it('should return success when success to execute query (callback)', function(done) {
+        it('should return success when success to execute query (callback)', function (done) {
             let mockReqest = getMockRequest()
             let client = Client.create(mockReqest, config)
             client.execute('query', {}, (err, data) => {
@@ -129,7 +129,7 @@ describe('Array', function() {
             })
         })
 
-        it('should return success when success to execute query not option (callback)', function(done) {
+        it('should return success when success to execute query not option (callback)', function (done) {
             let mockReqest = getMockRequest()
             let client = Client.create(mockReqest, config)
             client.execute('query', (err, data) => {
@@ -140,7 +140,7 @@ describe('Array', function() {
             })
         })
 
-        it('should return error when fail to start query (promise)', function(done) {
+        it('should return error when fail to start query (promise)', function (done) {
             new Promise(resolve => {
                 let mockReqest = getMockRequest()
                 mockReqest.startQuery = failStartQuery
@@ -152,7 +152,7 @@ describe('Array', function() {
             }).then(done)
         })
 
-        it('should return error when fail to start query (callback)', function(done) {
+        it('should return error when fail to start query (callback)', function (done) {
             let mockReqest = getMockRequest()
             mockReqest.startQuery = failStartQuery
             let client = Client.create(mockReqest, config)
@@ -163,7 +163,7 @@ describe('Array', function() {
             })
         })
 
-        it('should return error when fail to start query (promise)', function(done) {
+        it('should return error when fail to start query (promise)', function (done) {
             new Promise(resolve => {
                 let mockReqest = getMockRequest()
                 mockReqest.checkQuery = failCheckQuery
@@ -175,7 +175,7 @@ describe('Array', function() {
             }).then(done)
         })
 
-        it('should return error when fail to start query (callback)', function(done) {
+        it('should return error when fail to start query (callback)', function (done) {
             let mockReqest = getMockRequest()
             mockReqest.checkQuery = failCheckQuery
             let client = Client.create(mockReqest, config)
@@ -186,7 +186,7 @@ describe('Array', function() {
             })
         })
 
-        it('should return error when fail to start query (promise)', function(done) {
+        it('should return error when fail to start query (promise)', function (done) {
             new Promise(resolve => {
                 let mockReqest = getMockRequest()
                 mockReqest.getQueryResults = failGetQueryResults
@@ -198,7 +198,7 @@ describe('Array', function() {
             }).then(done)
         })
 
-        it('should return error when fail to start query (callback)', function(done) {
+        it('should return error when fail to start query (callback)', function (done) {
             let mockReqest = getMockRequest()
             mockReqest.getQueryResults = failGetQueryResults
             let client = Client.create(mockReqest, config)
@@ -209,11 +209,11 @@ describe('Array', function() {
             })
         })
 
-        it('should return error when query timeout (promise)', function(done) {
+        it('should return error when query timeout (promise)', function (done) {
             new Promise(resolve => {
                 let mockReqest = getMockRequest()
                 mockReqest.checkQuery = runningCheckQuery
-                let client = Client.create(mockReqest, Object.assign(config, {queryTimeout: 100, pollinInterval: 20}))
+                let client = Client.create(mockReqest, Object.assign(config, { queryTimeout: 100, pollinInterval: 20 }))
                 client.execute('query').catch(err => {
                     assert.equal(err.message, 'query timeout')
                     return resolve()
@@ -221,10 +221,10 @@ describe('Array', function() {
             }).then(done)
         })
 
-        it('should return error when query timeout (callback)', function(done) {
+        it('should return error when query timeout (callback)', function (done) {
             let mockReqest = getMockRequest()
             mockReqest.checkQuery = runningCheckQuery
-            let client = Client.create(mockReqest, Object.assign(config, {queryTimeout: 100, pollinInterval: 20}))
+            let client = Client.create(mockReqest, Object.assign(config, { queryTimeout: 100, pollinInterval: 20 }))
             client.execute('query', {}, (err, data) => {
                 assert.equal(err.message, 'query timeout')
                 assert.equal(data, null)
@@ -232,12 +232,12 @@ describe('Array', function() {
             })
         })
 
-         it('should return error when fail to stop query (promise)', function(done) {
+        it('should return error when fail to stop query (promise)', function (done) {
             new Promise(resolve => {
                 let mockReqest = getMockRequest()
                 mockReqest.checkQuery = runningCheckQuery
                 mockReqest.stopQuery = failStopQuery
-                let client = Client.create(mockReqest, Object.assign(config, {queryTimeout: 10, pollinInterval: 5000}))
+                let client = Client.create(mockReqest, Object.assign(config, { queryTimeout: 10, pollinInterval: 5000 }))
                 client.execute('query').catch(err => {
                     assert.equal(err.message, 'can not stop query')
                     return resolve()
@@ -245,11 +245,11 @@ describe('Array', function() {
             }).then(done)
         })
 
-        it('should return error when fail to stop query (callback)', function(done) {
+        it('should return error when fail to stop query (callback)', function (done) {
             let mockReqest = getMockRequest()
             mockReqest.checkQuery = runningCheckQuery
             mockReqest.stopQuery = failStopQuery
-            let client = Client.create(mockReqest, Object.assign(config, {queryTimeout: 10, pollinInterval: 5000}))
+            let client = Client.create(mockReqest, Object.assign(config, { queryTimeout: 10, pollinInterval: 5000 }))
             client.execute('query', {}, (err, data) => {
                 assert.equal(err.message, 'can not stop query')
                 assert.equal(data, null)
@@ -258,13 +258,13 @@ describe('Array', function() {
         })
     })
 
-    describe('#setConfig()', function() {
-        it('should return error when bucketUri is empty', function() {
+    describe('#setConfig()', function () {
+        it('should return error when bucketUri is empty', function () {
             let mockReqest = getMockRequest()
             let client = Client.create(mockReqest, config)
             let newConfig = Object.assign({}, config)
             newConfig.bucketUri = ""
-            assert.throws(() => {client.setConfig(newConfig)}, Error, 'buket uri required')
+            assert.throws(() => { client.setConfig(newConfig) }, Error, 'buket uri required')
         })
     })
 })

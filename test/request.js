@@ -12,28 +12,28 @@ class MockAthena {
 }
 
 const successStartQueryExecution = (params, callback) => {
-    let data = {QueryExecutionId: 'queryid'}
+    let data = { QueryExecutionId: 'queryid' }
     return callback(null, data)
-} 
+}
 
 const errorStartQueryExecution = (params, callback) => {
     return callback(new Error('can not start query'), null)
-} 
+}
 
 const successGetQueryExecution = (params, callback) => {
-    let data = {QueryExecution: {Status: {State: 'SUCCEEDED'}}}
+    let data = { QueryExecution: { Status: { State: 'SUCCEEDED' } } }
     return callback(null, data)
-} 
+}
 
 const runningGetQueryExecution = (params, callback) => {
-    let data = {QueryExecution: {Status: {State: 'RUNNING'}}}
+    let data = { QueryExecution: { Status: { State: 'RUNNING' } } }
     return callback(null, data)
-} 
+}
 
 const failGetQueryExecution = (params, callback) => {
-    let data = {QueryExecution: {Status: {State: 'FAILED'}}}
+    let data = { QueryExecution: { Status: { State: 'FAILED' } } }
     return callback(null, data)
-} 
+}
 
 const errorGetQueryExecution = (params, callback) => {
     return callback(new Error('can not check query'), null)
@@ -49,11 +49,11 @@ const errorGetQueryResults = (params, callback) => {
 
 const successStopQueryExecution = (params, callback) => {
     return callback(null, 'success')
-} 
+}
 
 const errorStopQueryExecution = (params, callback) => {
     return callback(new Error('can not stop query'), null)
-} 
+}
 
 function getMockAthena() {
     let mock = new MockAthena()
@@ -64,9 +64,9 @@ function getMockAthena() {
     return mock
 }
 
-describe('Array', function() {
-    describe('#startQuery()', function() {
-        it('should return queryid when success to startQuery', function(done) {
+describe('Array', function () {
+    describe('#startQuery()', function () {
+        it('should return queryid when success to startQuery', function (done) {
             new Promise(resolve => {
                 let mockAthena = getMockAthena()
                 let request = Request.create(mockAthena)
@@ -77,7 +77,7 @@ describe('Array', function() {
             }).then(done)
         })
 
-        it('should return error when fail to startQuery', function(done) {
+        it('should return error when fail to startQuery', function (done) {
             new Promise(resolve => {
                 let mockAthena = getMockAthena()
                 mockAthena.startQueryExecution = errorStartQueryExecution
@@ -89,8 +89,8 @@ describe('Array', function() {
             }).then(done)
         })
     })
-    describe('#checkQuery()', function() {
-        it('should return true when query succeeded', function(done) {
+    describe('#checkQuery()', function () {
+        it('should return true when query succeeded', function (done) {
             new Promise(resolve => {
                 let mockAthena = getMockAthena()
                 let request = Request.create(mockAthena)
@@ -101,7 +101,7 @@ describe('Array', function() {
             }).then(done)
         })
 
-        it('should return false when query running', function(done) {
+        it('should return false when query running', function (done) {
             new Promise(resolve => {
                 let mockAthena = getMockAthena()
                 mockAthena.getQueryExecution = runningGetQueryExecution
@@ -113,7 +113,7 @@ describe('Array', function() {
             }).then(done)
         })
 
-        it('should return error when query failed', function(done) {
+        it('should return error when query failed', function (done) {
             new Promise(resolve => {
                 let mockAthena = getMockAthena()
                 mockAthena.getQueryExecution = failGetQueryExecution
@@ -125,7 +125,7 @@ describe('Array', function() {
             }).then(done)
         })
 
-        it('should return error when get query failed', function(done) {
+        it('should return error when get query failed', function (done) {
             new Promise(resolve => {
                 let mockAthena = getMockAthena()
                 mockAthena.getQueryExecution = errorGetQueryExecution
@@ -137,8 +137,8 @@ describe('Array', function() {
             }).then(done)
         })
     })
-    describe('#stopQuery()', function() {
-        it('should return success when success to startQuery', function(done) {
+    describe('#stopQuery()', function () {
+        it('should return success when success to startQuery', function (done) {
             new Promise(resolve => {
                 let mockAthena = getMockAthena()
                 let request = Request.create(mockAthena)
@@ -149,7 +149,7 @@ describe('Array', function() {
             }).then(done)
         })
 
-        it('should return error when fail to startQuery', function(done) {
+        it('should return error when fail to startQuery', function (done) {
             new Promise(resolve => {
                 let mockAthena = getMockAthena()
                 mockAthena.stopQueryExecution = errorStopQueryExecution
@@ -162,8 +162,8 @@ describe('Array', function() {
         })
     })
 
-    describe('#getQueryResults()', function() {
-        it('should return success when success to getQueryResults', function(done) {
+    describe('#getQueryResults()', function () {
+        it('should return success when success to getQueryResults', function (done) {
             new Promise(resolve => {
                 let mockAthena = getMockAthena()
                 let request = Request.create(mockAthena)
@@ -174,7 +174,7 @@ describe('Array', function() {
             }).then(done)
         })
 
-        it('should return error when fail to getQueryResults', function(done) {
+        it('should return error when fail to getQueryResults', function (done) {
             new Promise(resolve => {
                 let mockAthena = getMockAthena()
                 mockAthena.getQueryResults = errorGetQueryResults
