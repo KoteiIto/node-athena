@@ -59,7 +59,7 @@ const errorStopQueryExecution = (params, callback) => {
 
 const throttlingErrorExecution = (params, callback) => {
     let error = new Error('Rate exceeded')
-    error.errorType = 'ThrottlingException'
+    error.code = 'ThrottlingException'
     return callback(error, null)
 }
 
