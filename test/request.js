@@ -5,6 +5,8 @@ const Request = require('../lib/request')
 
 const config = {
     bucketUri: 's3://xxxx',
+    baseRetryWait: 2,
+    retryCountMax: 5,
 }
 
 class MockAthena {
@@ -55,6 +57,12 @@ const errorStopQueryExecution = (params, callback) => {
     return callback(new Error('can not stop query'), null)
 }
 
+const throttlingErrorExecution = (params, callback) => {
+    let error = new Error('Rate exceeded')
+    error.errorType = 'ThrottlingException'
+    return callback(error, null)
+}
+
 function getMockAthena() {
     let mock = new MockAthena()
     mock.startQueryExecution = successStartQueryExecution
@@ -84,6 +92,18 @@ describe('Array', function () {
                 let request = Request.create(mockAthena)
                 request.startQuery('query', config).catch(err => {
                     assert.equal(err.message, 'can not start query')
+                    return resolve()
+                })
+            }).then(done)
+        })
+
+        it('should retry when get ThrottlingException', function (done) {
+            new Promise(resolve => {
+                let mockAthena = getMockAthena()
+                mockAthena.startQueryExecution = throttlingErrorExecution
+                let request = Request.create(mockAthena)
+                request.startQuery('queryid', config).catch(error => {
+                    assert.equal(error.message, 'Rate exceeded')
                     return resolve()
                 })
             }).then(done)
@@ -136,6 +156,18 @@ describe('Array', function () {
                 })
             }).then(done)
         })
+
+        it('should retry when get ThrottlingException', function (done) {
+            new Promise(resolve => {
+                let mockAthena = getMockAthena()
+                mockAthena.getQueryExecution = throttlingErrorExecution
+                let request = Request.create(mockAthena)
+                request.checkQuery('queryid', config).catch(error => {
+                    assert.equal(error.message, 'Rate exceeded')
+                    return resolve()
+                })
+            }).then(done)
+        })
     })
     describe('#stopQuery()', function () {
         it('should return success when success to startQuery', function (done) {
@@ -156,6 +188,18 @@ describe('Array', function () {
                 let request = Request.create(mockAthena)
                 request.stopQuery('queryid', config).catch(error => {
                     assert.equal(error.message, 'can not stop query')
+                    return resolve()
+                })
+            }).then(done)
+        })
+
+        it('should retry when get ThrottlingException', function (done) {
+            new Promise(resolve => {
+                let mockAthena = getMockAthena()
+                mockAthena.stopQueryExecution = throttlingErrorExecution
+                let request = Request.create(mockAthena)
+                request.stopQuery('queryid', config).catch(error => {
+                    assert.equal(error.message, 'Rate exceeded')
                     return resolve()
                 })
             }).then(done)
@@ -181,6 +225,18 @@ describe('Array', function () {
                 let request = Request.create(mockAthena)
                 request.getQueryResults('queryid', config).catch(err => {
                     assert.equal(err.message, 'can not get query results')
+                    return resolve()
+                })
+            }).then(done)
+        })
+
+        it('should retry when get ThrottlingException', function (done) {
+            new Promise(resolve => {
+                let mockAthena = getMockAthena()
+                mockAthena.getQueryResults = throttlingErrorExecution
+                let request = Request.create(mockAthena)
+                request.getQueryResults('queryid', config).catch(error => {
+                    assert.equal(error.message, 'Rate exceeded')
                     return resolve()
                 })
             }).then(done)
