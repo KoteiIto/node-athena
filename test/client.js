@@ -4,7 +4,7 @@ const assert = require('assert')
 const Client = require('../lib/client')
 const config = {
     bucketUri: 's3://xxxx',
-    pollinInterval: 5,
+    pollingInterval: 5,
 }
 
 class MockRequest {
@@ -118,6 +118,18 @@ describe('Array', function () {
             }).then(done)
         })
 
+        it('should return success when success to execute query (promise)', function (done) {
+            new Promise(resolve => {
+                let mockReqest = getMockRequest()
+                let newConfig = Object.assign({ format: 'raw' }, config)
+                let client = Client.create(mockReqest, newConfig)
+                client.execute('query').then(data => {
+                    assert.notEqual(data.ResultSet, undefined)
+                    return resolve()
+                })
+            }).then(done)
+        })
+
         it('should return success when success to execute query (callback)', function (done) {
             let mockReqest = getMockRequest()
             let client = Client.create(mockReqest, config)
@@ -213,7 +225,7 @@ describe('Array', function () {
             new Promise(resolve => {
                 let mockReqest = getMockRequest()
                 mockReqest.checkQuery = runningCheckQuery
-                let client = Client.create(mockReqest, Object.assign(config, { queryTimeout: 100, pollinInterval: 20 }))
+                let client = Client.create(mockReqest, Object.assign({}, config, { queryTimeout: 100, pollinInterval: 20 }))
                 client.execute('query').catch(err => {
                     assert.equal(err.message, 'query timeout')
                     return resolve()
@@ -224,7 +236,7 @@ describe('Array', function () {
         it('should return error when query timeout (callback)', function (done) {
             let mockReqest = getMockRequest()
             mockReqest.checkQuery = runningCheckQuery
-            let client = Client.create(mockReqest, Object.assign(config, { queryTimeout: 100, pollinInterval: 20 }))
+            let client = Client.create(mockReqest, Object.assign({}, config, { queryTimeout: 100, pollinInterval: 20 }))
             client.execute('query', {}, (err, data) => {
                 assert.equal(err.message, 'query timeout')
                 assert.equal(data, null)
@@ -237,7 +249,7 @@ describe('Array', function () {
                 let mockReqest = getMockRequest()
                 mockReqest.checkQuery = runningCheckQuery
                 mockReqest.stopQuery = failStopQuery
-                let client = Client.create(mockReqest, Object.assign(config, { queryTimeout: 10, pollinInterval: 5000 }))
+                let client = Client.create(mockReqest, Object.assign({}, config, { queryTimeout: 10, pollinInterval: 5000 }))
                 client.execute('query').catch(err => {
                     assert.equal(err.message, 'can not stop query')
                     return resolve()
@@ -249,10 +261,28 @@ describe('Array', function () {
             let mockReqest = getMockRequest()
             mockReqest.checkQuery = runningCheckQuery
             mockReqest.stopQuery = failStopQuery
-            let client = Client.create(mockReqest, Object.assign(config, { queryTimeout: 10, pollinInterval: 5000 }))
+            let client = Client.create(mockReqest, Object.assign({}, config, { queryTimeout: 10, pollinInterval: 5000 }))
             client.execute('query', {}, (err, data) => {
                 assert.equal(err.message, 'can not stop query')
                 assert.equal(data, null)
+                done()
+            })
+        })
+
+        it('should return error when invalid config', function () {
+            try {
+                let mockReqest = getMockRequest()
+                let client = Client.create(mockReqest, Object.assign({}, config, { bucketUri: '' }))
+            } catch (err) {
+                assert.equal(err.message, 'buket uri required')
+            }
+        })
+
+        it('should return error when invalid config2', function (done) {
+            let mockReqest = getMockRequest()
+            let client = Client.create(mockReqest, Object.assign({}, config, { format: 'hoge' }))
+            client.execute('query', {}, (err, data) => {
+                assert.equal(err.message, 'invalid format hoge')
                 done()
             })
         })
