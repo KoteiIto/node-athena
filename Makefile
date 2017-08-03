@@ -1,6 +1,9 @@
 mocha=./node_modules/mocha/bin/_mocha
 istanbul=./node_modules/.bin/istanbul
 
+test: clean
+	$(istanbul) cover $(mocha)
+
 test-cov: clean
 	$(istanbul) cover $(mocha) -- -R spec test/*
 
