@@ -32,8 +32,18 @@ const runningGetQueryExecution = (params, callback) => {
     return callback(null, data)
 }
 
+const cancelGetQueryExecution = (params, callback) => {
+    let data = { QueryExecution: { Status: { State: 'CANCELLED' } } }
+    return callback(null, data)
+}
+
 const failGetQueryExecution = (params, callback) => {
     let data = { QueryExecution: { Status: { State: 'FAILED' } } }
+    return callback(null, data)
+}
+
+const unknownGetQueryExecution = (params, callback) => {
+    let data = { QueryExecution: { Status: { State: 'HOGE' } } }
     return callback(null, data)
 }
 
@@ -133,6 +143,18 @@ describe('Array', function () {
             }).then(done)
         })
 
+        it('should return error when query canceled', function (done) {
+            new Promise(resolve => {
+                let mockAthena = getMockAthena()
+                mockAthena.getQueryExecution = cancelGetQueryExecution
+                let request = Request.create(mockAthena)
+                request.checkQuery('queryid', config).catch(error => {
+                    assert.equal(error.message, 'query cancelled')
+                    return resolve()
+                })
+            }).then(done)
+        })
+
         it('should return error when query failed', function (done) {
             new Promise(resolve => {
                 let mockAthena = getMockAthena()
@@ -140,6 +162,18 @@ describe('Array', function () {
                 let request = Request.create(mockAthena)
                 request.checkQuery('queryid', config).catch(error => {
                     assert.equal(error.message, 'query failed')
+                    return resolve()
+                })
+            }).then(done)
+        })
+
+        it('should return error when query status unknown', function (done) {
+            new Promise(resolve => {
+                let mockAthena = getMockAthena()
+                mockAthena.getQueryExecution = unknownGetQueryExecution
+                let request = Request.create(mockAthena)
+                request.checkQuery('queryid', config).catch(error => {
+                    assert.equal(error.message, 'unknown query state HOGE')
                     return resolve()
                 })
             }).then(done)
