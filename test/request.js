@@ -38,7 +38,7 @@ const cancelGetQueryExecution = (params, callback) => {
 }
 
 const failGetQueryExecution = (params, callback) => {
-    let data = { QueryExecution: { Status: { State: 'FAILED' } } }
+    let data = { QueryExecution: { Status: { State: 'FAILED', StateChangeReason: 'FAILED: Execution Error' } } }
     return callback(null, data)
 }
 
@@ -149,7 +149,7 @@ describe('Array', function () {
                 mockAthena.getQueryExecution = cancelGetQueryExecution
                 let request = Request.create(mockAthena)
                 request.checkQuery('queryid', config).catch(error => {
-                    assert.equal(error.message, 'query cancelled')
+                    assert.equal(error.message, 'FAILED: Query CANCELLED')
                     return resolve()
                 })
             }).then(done)
@@ -161,7 +161,7 @@ describe('Array', function () {
                 mockAthena.getQueryExecution = failGetQueryExecution
                 let request = Request.create(mockAthena)
                 request.checkQuery('queryid', config).catch(error => {
-                    assert.equal(error.message, 'query failed')
+                    assert.equal(error.message, 'FAILED: Execution Error')
                     return resolve()
                 })
             }).then(done)
@@ -173,7 +173,7 @@ describe('Array', function () {
                 mockAthena.getQueryExecution = unknownGetQueryExecution
                 let request = Request.create(mockAthena)
                 request.checkQuery('queryid', config).catch(error => {
-                    assert.equal(error.message, 'unknown query state HOGE')
+                    assert.equal(error.message, 'FAILED: UnKnown State HOGE')
                     return resolve()
                 })
             }).then(done)
