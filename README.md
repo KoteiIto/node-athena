@@ -60,7 +60,8 @@ var credentials = {
 | bucketUrl      | __Required__ | URI of s3 bucket|
 | pollingInterval      | 1000  |  Interval of polling sql results (ms) |
 | queryTimeout      | 0      | Timeout of query execution.  `0` is no timeout |
-| format | 'array' | If `'array'`, the result of the query is as the following `[ { _col0: '1' } , { _col0: '2' }]` . If `'raw'`,  the  result of query is same with `aws-sdk`  |
+| format | 'array' | If `'array'`, the result of the query is as the following `[ { _col0: '1' } , { _col0: '2' }]` . If `'raw'`,  the  result of query is same with `aws-sdk` |
+| concurrentExecMax      | 5      | The number of cuncurrent execution of query max. it should be set `smaller than AWS Service limit`(default is 5) |
 
 ### client.execute([_query_], [_options_], [_callback_])
 Returns query result. The _options_ can be specified as an object with `timeout` and `format` members  such as the following:
