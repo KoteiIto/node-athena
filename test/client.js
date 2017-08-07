@@ -152,6 +152,20 @@ describe('Array', function () {
             })
         })
 
+        it('should return success when execute query multiple (promise)', function (done) {
+            new Promise(resolve => {
+                let mockReqest = getMockRequest()
+                let client = Client.create(mockReqest, config)
+                let promises = []
+                for (let i = 0; i < 50; i++) {
+                    promises.push(client.execute('query'))
+                }
+                Promise.all(promises).then(() => {
+                    return resolve()
+                })
+            }).then(done)
+        })
+
         it('should return error when fail to start query (promise)', function (done) {
             new Promise(resolve => {
                 let mockReqest = getMockRequest()
