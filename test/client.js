@@ -78,7 +78,8 @@ const successGetQueryResults = (query, options, callback) => {
                     Data: [{ VarCharValue: '1' }, { VarCharValue: '2' }]
                 }
             ]
-        }
+        },
+        NextToken: "TOKEN",
     }
     return new Promise((resolve, reject) => {
         setTimeout(() => {
