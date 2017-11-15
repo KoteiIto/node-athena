@@ -311,12 +311,20 @@ describe('Array', function () {
             assert.throws(() => { let client = Client.create(mockReqest, newConfig) }, Error, 'buket uri required')
         })
 
-        it('should return valid pollingInterval error when pollingInterval is empty', function () {
+        it('should return valid pollingInterval when is empty', function () {
             let mockReqest = getMockRequest()
             let newConfig = Object.assign({}, config)
             delete newConfig.pollingInterval
             let client = Client.create(mockReqest, newConfig)
             assert.equal(client.config.pollingInterval, 0)
+        })
+
+        it('should return valid queryTimeout when is empty', function () {
+            let mockReqest = getMockRequest()
+            let newConfig = Object.assign({}, config)
+            delete newConfig.queryTimeout
+            let client = Client.create(mockReqest, newConfig)
+            assert.equal(client.config.queryTimeout, 0)
         })
     })
 })
