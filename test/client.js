@@ -306,10 +306,17 @@ describe('Array', function () {
     describe('#setConfig()', function () {
         it('should return error when bucketUri is empty', function () {
             let mockReqest = getMockRequest()
-            let client = Client.create(mockReqest, config)
             let newConfig = Object.assign({}, config)
             newConfig.bucketUri = ""
-            assert.throws(() => { client.setConfig(newConfig) }, Error, 'buket uri required')
+            assert.throws(() => { let client = Client.create(mockReqest, newConfig) }, Error, 'buket uri required')
+        })
+
+        it('should return valid pollingInterval error when pollingInterval is empty', function () {
+            let mockReqest = getMockRequest()
+            let newConfig = Object.assign({}, config)
+            delete newConfig.pollingInterval
+            let client = Client.create(mockReqest, newConfig)
+            assert.equal(client.config.pollingInterval, 0)
         })
     })
 })
