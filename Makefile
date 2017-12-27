@@ -1,14 +1,11 @@
-mocha=./node_modules/.bin/_mocha
-istanbul=./node_modules/.bin/istanbul
+build: clean
+	yarn run build
 
-test: clean
-	$(mocha)
-
-test-cov: clean
-	$(istanbul) cover $(mocha) -- -R spec test/*
+test:
+	yarn run test
 
 coveralls: 
-	cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js;
+	yarn coveralls
 
 clean:
-	rm -fr coverage
+	rm -rf build | rm -rf coverage

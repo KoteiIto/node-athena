@@ -1,8 +1,10 @@
 [![Build Status](https://travis-ci.org/KoteiIto/node-athena.svg?branch=master)](https://travis-ci.org/KoteiIto/node-athena)
 [![Coverage Status](https://coveralls.io/repos/github/KoteiIto/node-athena/badge.svg?branch=master)](https://coveralls.io/github/KoteiIto/node-athena?branch=master)
 
-athena-client - a nodejs simple aws athena client
+athena-client - a  simple aws athena client for nodejs and typescript
 ===========================
+This is version 2.x document. 1.x document is [here](https://github.com/KoteiIto/node-athena/tree/1.x)
+
 Install with:
 
     npm install athena-client
@@ -10,18 +12,18 @@ Install with:
 ## Usage Example
 
 ```js
-var credentials = {
-    accessKeyId: 'xxxx',
-    secretAccessKey: 'xxxx',
-    region: 'xxxx',
-}
-var config = {
+var clientConfig = {
     bucketUri: 's3://xxxx'
 }
+
+var awsConfig = {
+    region: 'xxxx', 
+}
  
-var Athena = require("athena-client")
-var client = Athena.Client(credentials, config)
- 
+var athena = require("athena-client")
+var client = athena.createClient(clientConfig, awsConfig)
+
+// receive result by callback
 client.execute('SELECT 1', function(err, data) {
     if (err) {
         return console.error(err)
@@ -29,69 +31,103 @@ client.execute('SELECT 1', function(err, data) {
     console.log(data)
 })
  
-// You can also execute query with promises
-client.execute('SELECT 1').then(function(data) {
+// receive result by promise
+client.execute('SELECT 1').toPromise()
+.then(function(data) {
     console.log(data)
 }).catch(function(err) {
     console.error(err)
+})
+
+// receive result by stream
+var stream = client.execute('SELECT 1').toStream()
+stream.on('data', (record) => {
+  console.log(record)
+})
+stream.on('query_end', (queryExecution) => {
+  console.log(queryExecution)
+})
+stream.on('end', () => {
+  console.log('end')
+})
+stream.on('error', (e) => {
+  console.error(e)
 })
 ```
 
 # API
 ### athena = require("athena-client")
-This module exposes the `Client` method, which execute query to AWS Athena
+This module exposes the `createClient` method, which execute query to AWS Athena
 
-### client = athena.Client([_credentials_], [_config_])
-Returns a client instance attached to the account specified by the given credentials and config.
+### client = athena.createClient([_clientConfig_], [_awsConfig_])
+Returns a client instance attached to the account specified by the given clientConfig and awsConfig.
 
-The credentials can be specified as an object with `accessKeyId` and `secretAccessKey` and `region` members  such as the following:
-
-```javascript
-var credentials = {
-    accessKeyId: 'xxxx',
-    secretAccessKey: 'xxxx',
-    region: 'xxxx',
-}
-```
-
-#### `config` object properties
+#### `clientConfig` object properties
 | Property  | Default   | Description |
 |-----------|-----------|-------------|
 | bucketUri      | __Required__ | URI of S3 bucket for saving a query results file(*.csv) and a metadata file (*.csv.metadata) |
 | pollingInterval      | 1000  |  Interval of polling sql results (ms) |
 | queryTimeout      | 0      | Timeout of query execution.  `0` is no timeout |
-| format | 'array' | If `'array'`, the result of the query is as the following `[ { _col0: '1' } , { _col0: '2' }]` . If `'raw'`,  the  result of query is same with `aws-sdk` |
-| concurrentExecMax      | 5      | The number of cuncurrent execution of query max. it should be set `smaller than AWS Service limit`(default is 5) |
+| concurrentExecMax      | 5      | The number of cuncurrent execution of query max. It should be set `smaller than AWS Service limit`(default is 5) |
+| maxBufferSize     | '128M' | Maximum buffer when retrieving query results |
 
-### client.execute([_query_], [_options_], [_callback_])
-Returns query result. The _options_ can be specified as an object with `timeout` and `format` members  such as the following:
+#### `awsConfig` object properties
+| Property  | Default   | Description |
+|-----------|-----------|-------------|
+| region        | __Required__ | Your Athena and S3 region |
+| accessKeyId      | undifined  | Your IAM accessKeyId. This is optional |
+| secretAccessKey      | undifined | Your IAM secretAccessKey. This is optional |
 
-```javascript
-var options = {
-    timeout: 3000,
-    format: 'raw',
+### client.execute([_query_], [_callback_])
+It will return the following result.
+If you want to know more about params of `queryExecution`, please refer to the aws-sdk [document](https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/Athena.html#getQueryExecution-property)  
+
+```json
+{
+    "records": [
+        {"col1": "val1", "col2": "val2"},
+        {"col1": "val3", "col2": "val4"}
+    ],
+    "queryExecution": {
+        "Query": "", 
+        "QueryExecutionId": "", 
+        "ResultConfiguration": {
+            "OutputLocation": ""
+        }, 
+        "Statistics": {
+            "DataScannedInBytes": 0, 
+            "EngineExecutionTimeInMillis": 137
+        }, 
+        "Status": {
+            "CompletionDateTime": "2017-12-31T16:03:53.493Z", 
+            "State": "SUCCEEDED", 
+            "SubmissionDateTime": "2017-12-31T16:03:53.209Z"
+        }
+    }
 }
 ```
 
-```javascript
-client.execute('SELECT 1', function(err, data) {
-    if (err) {
-        return console.error(err)
-    }
-    console.log(data)
+### client.execute([_query_]).toPromise()
+It will return promise object to get result.
+
+### client.execute([_query_]).toStream()
+It will return stream object to get result. If your query results are very `large`, we recommend using this stream. 
+
+```js
+// Get record one by one
+stream.on('data', (record) => {
+  console.log(record) // {"col1": "val1", "col2": "val2"}
 })
 
-client.execute('SELECT 1', {timeout: 3000}, function(err, data) {
-    if (err) {
-        return console.error(err)
-    }
-    console.log(data)
+// When query succeed, this event will emit.
+stream.on('query_end', (queryExecution) => {
+  console.log(queryExecution) // {"QueryExecutionId": "", ...}
 })
 
-client.execute('SELECT 1').then(function(data) {
-    console.log(data)
-}).catch(function(err) {
-    console.error(err)
+stream.on('end', () => {
+  console.log('end')
 })
-
+stream.on('error', (e) => {
+  console.error(e)
+})
 ```
