@@ -1,0 +1,41 @@
+{
+  "extends": [
+    "tslint:latest",
+    "tslint-eslint-rules",
+    "tslint-plugin-prettier"
+  ],
+  "rules": {
+    "no-console": false,
+    "interface-name": [
+      true,
+      "never-prefix"
+    ],
+    "object-literal-sort-keys": false,
+    "no-submodule-imports": false,
+    "no-any": false,
+    "semicolon": [
+      true,
+      "never"
+    ],
+    "trailing-comma": [
+      true,
+      {
+        "multiline": "always",
+        "singleline": "never"
+      }
+    ],
+    "quotemark": [
+      true,
+      "single"
+    ],
+    "prettier": [
+      true,
+      {
+        "semi": false,
+        "trailingComma": "all",
+        "singleQuote": true,
+        "tabWidth": 2
+      }
+    ]
+  }
+}

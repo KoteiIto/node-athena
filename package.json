@@ -7,9 +7,24 @@
     "type": "git",
     "url": "git@github.com:KoteiIto/node-athena.git"
   },
-  "main": "index.js",
+  "main": "build/index.js",
   "scripts": {
-    "test": "./node_modules/mocha/bin/mocha"
+    "pretest": "yarn build",
+    "test": "rm -rf coverage && istanbul cover _mocha -- -R spec build/test/*.js",
+    "posttest": "cd coverage && remap-istanbul -i coverage.json -o html-report -t html",
+    "lint": "tslint -c tslint.json 'src/**/*.ts'",
+    "fmt": "tslint -c tslint.json 'src/**/*.ts' --fix",
+    "prebuild": "yarn fmt",
+    "build": "rm -rf build && tsc",
+    "watch": "onchange 'src/**/*.ts' -- yarn build",
+    "precommit": "lint-staged",
+    "coveralls": "cat ./coverage/lcov.info | coveralls"
+  },
+  "lint-staged": {
+    "src/**/*.ts": [
+      "yarn fmt",
+      "git add"
+    ]
   },
   "keywords": [
     "aws",
@@ -19,16 +34,30 @@
     "athena-client",
     "lambda",
     "aws-lambda",
-    "javascript"
+    "javascript",
+    "typescript"
   ],
   "author": "KoteiIto",
-  "dependencies": {
-    "aws-sdk": "^2.82.0",
-    "co": "^4.6.0"
-  },
   "devDependencies": {
-    "coveralls": "^2.13.1",
+    "@types/byline": "^4.2.31",
+    "@types/mocha": "^2.2.45",
+    "@types/node": "^8.5.2",
+    "coveralls": "^3.0.0",
+    "husky": "^0.14.3",
     "istanbul": "^0.4.5",
-    "mocha": "^3.4.2"
+    "lint-staged": "^6.0.0",
+    "mocha": "^4.1.0",
+    "onchange": "^3.3.0",
+    "prettier": "^1.9.2",
+    "remap-istanbul": "^0.9.5",
+    "tslint": "^5.8.0",
+    "tslint-eslint-rules": "^4.1.1",
+    "tslint-plugin-prettier": "^1.3.0",
+    "typescript": "^2.6.2"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.175.0",
+    "byline": "^5.0.0",
+    "typescript-collections": "^1.2.5"
   }
 }
