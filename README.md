@@ -10,17 +10,15 @@ Install with:
 ## Usage Example
 
 ```js
-var credentials = {
-    accessKeyId: 'xxxx',
-    secretAccessKey: 'xxxx',
+var awsConfig = {
     region: 'xxxx',
 }
-var config = {
+var clientConfig = {
     bucketUri: 's3://xxxx'
 }
  
-var Athena = require("athena-client")
-var client = Athena.Client(credentials, config)
+var athena = require("athena-client")
+var client = athena.createClient(clientConfig, awsConfig)
  
 client.execute('SELECT 1', function(err, data) {
     if (err) {
@@ -30,7 +28,8 @@ client.execute('SELECT 1', function(err, data) {
 })
  
 // You can also execute query with promises
-client.execute('SELECT 1').then(function(data) {
+client.execute('SELECT 1').toPromise()
+.then(function(data) {
     console.log(data)
 }).catch(function(err) {
     console.error(err)
@@ -39,39 +38,33 @@ client.execute('SELECT 1').then(function(data) {
 
 # API
 ### athena = require("athena-client")
-This module exposes the `Client` method, which execute query to AWS Athena
+This module exposes the `createClient` method, which execute query to AWS Athena
 
-### client = athena.Client([_credentials_], [_config_])
-Returns a client instance attached to the account specified by the given credentials and config.
+### client = athena.createClient([_clientConfig_], [_awsConfig_])
+Returns a client instance attached to the account specified by the given clientConfig and awsConfig .
 
-The credentials can be specified as an object with `accessKeyId` and `secretAccessKey` and `region` members  such as the following:
 
-```javascript
-var credentials = {
-    accessKeyId: 'xxxx',
-    secretAccessKey: 'xxxx',
-    region: 'xxxx',
-}
-```
-
-#### `config` object properties
+#### `clientConfig` object properties
 | Property  | Default   | Description |
 |-----------|-----------|-------------|
 | bucketUri      | __Required__ | URI of S3 bucket for saving a query results file(*.csv) and a metadata file (*.csv.metadata) |
 | pollingInterval      | 1000  |  Interval of polling sql results (ms) |
 | queryTimeout      | 0      | Timeout of query execution.  `0` is no timeout |
-| format | 'array' | If `'array'`, the result of the query is as the following `[ { _col0: '1' } , { _col0: '2' }]` . If `'raw'`,  the  result of query is same with `aws-sdk` |
 | concurrentExecMax      | 5      | The number of cuncurrent execution of query max. it should be set `smaller than AWS Service limit`(default is 5) |
 
-### client.execute([_query_], [_options_], [_callback_])
-Returns query result. The _options_ can be specified as an object with `timeout` and `format` members  such as the following:
+
+The awsConfig can be specified as an object with `region` and `accessKeyId` and `secretAccessKey` members  such as the following:
 
 ```javascript
-var options = {
-    timeout: 3000,
-    format: 'raw',
+var awsConfig = {
+    region: 'xxxx',
+    accessKeyId: 'xxxx', // Optional
+    secretAccessKey: 'xxxx', // Optional
 }
 ```
+
+### client.execute([_query_], [_callback_])
+Returns query result.
 
 ```javascript
 client.execute('SELECT 1', function(err, data) {
@@ -81,14 +74,8 @@ client.execute('SELECT 1', function(err, data) {
     console.log(data)
 })
 
-client.execute('SELECT 1', {timeout: 3000}, function(err, data) {
-    if (err) {
-        return console.error(err)
-    }
-    console.log(data)
-})
-
-client.execute('SELECT 1').then(function(data) {
+client.execute('SELECT 1').toPromise()
+.then(function(data) {
     console.log(data)
 }).catch(function(err) {
     console.error(err)
