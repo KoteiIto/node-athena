@@ -92,14 +92,13 @@ If you want to know more about params of `queryExecution`, please refer to the a
 ```json
 {
     "records": [
-        {"col1": "val1", "col2": "val2"},
-        {"col1": "val3", "col2": "val4"}
+        {"_col0:": "1"}
     ],
     "queryExecution": {
-        "Query": "", 
-        "QueryExecutionId": "", 
+        "Query": "SELECT 1", 
+        "QueryExecutionId": "55571bb9-8e4e-4274-90b7-8cffe4539c3c", 
         "ResultConfiguration": {
-            "OutputLocation": ""
+            "OutputLocation": "s3://bucket/55571bb9-8e4e-4274-90b7-8cffe4539c3c"
         }, 
         "Statistics": {
             "DataScannedInBytes": 0, 
