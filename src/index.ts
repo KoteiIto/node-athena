@@ -2,10 +2,10 @@ import * as aws from 'aws-sdk'
 import { AthenaClient, AthenaClientConfig } from './lib/client'
 import { AthenaRequest } from './lib/request'
 
-exports.createClient = (
+export function createClient(
   clientConfig: AthenaClientConfig,
   awsConfig: aws.Config,
-) => {
+) {
   if (
     clientConfig === undefined ||
     clientConfig.bucketUri === undefined ||

@@ -7,7 +7,8 @@
     "noImplicitAny": true,
     "noImplicitReturns": true,
     "strictNullChecks": true,
-    "outDir": "build"
+    "outDir": "build",
+    "declaration": true
   },
   "exclude": [
     "node_modules"

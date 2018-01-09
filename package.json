@@ -8,6 +8,8 @@
     "url": "git@github.com:KoteiIto/node-athena.git"
   },
   "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "typings": "build/index.d.ts",
   "scripts": {
     "pretest": "yarn build",
     "test": "rm -rf coverage && istanbul cover _mocha -- -R spec build/test/*.js",
