@@ -48,16 +48,16 @@ client.execute('SELECT 1').toPromise()
 ### Receive result by Stream
 ```js
 var stream = client.execute('SELECT 1').toStream()
-stream.on('data', (record) => {
+stream.on('data', function(record) {
   console.log(record)
 })
-stream.on('query_end', (queryExecution) => {
+stream.on('query_end', function(queryExecution) {
   console.log(queryExecution)
 })
-stream.on('end', () => {
+stream.on('end', function() {
   console.log('end')
 })
-stream.on('error', (e) => {
+stream.on('error', function(e) {
   console.error(e)
 })
 ```
@@ -121,19 +121,19 @@ It will return stream object to get result. If your query results are very `larg
 
 ```js
 // Get record one by one
-stream.on('data', (record) => {
+stream.on('data', function(record) {
   console.log(record) // {"col1": "val1", "col2": "val2"}
 })
 
 // When query succeed, this event will emit.
-stream.on('query_end', (queryExecution) => {
+stream.on('query_end', function(queryExecution) {
   console.log(queryExecution) // {"QueryExecutionId": "", ...}
 })
 
-stream.on('end', () => {
+stream.on('end', function() {
   console.log('end')
 })
-stream.on('error', (e) => {
+stream.on('error', function(e) {
   console.error(e)
 })
 ```
