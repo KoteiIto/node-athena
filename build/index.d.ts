@@ -1,3 +1,7 @@
-import * as aws from 'aws-sdk';
 import { AthenaClient, AthenaClientConfig } from './lib/client';
-export declare function createClient(clientConfig: AthenaClientConfig, awsConfig: aws.Config): AthenaClient;
+export interface AwsConfig {
+    region: string;
+    accessKeyId?: string;
+    secretAccessKey?: string;
+}
+export declare function createClient(clientConfig: AthenaClientConfig, awsConfig: AwsConfig): AthenaClient;

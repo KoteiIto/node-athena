@@ -2,9 +2,15 @@ import * as aws from 'aws-sdk'
 import { AthenaClient, AthenaClientConfig } from './lib/client'
 import { AthenaRequest } from './lib/request'
 
+export interface AwsConfig {
+  region: string
+  accessKeyId?: string
+  secretAccessKey?: string
+}
+
 export function createClient(
   clientConfig: AthenaClientConfig,
-  awsConfig: aws.Config,
+  awsConfig: AwsConfig,
 ) {
   if (
     clientConfig === undefined ||
