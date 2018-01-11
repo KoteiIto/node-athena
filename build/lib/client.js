@@ -8,9 +8,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const byline_1 = require("byline");
+const csv = require("csv-parser");
 const timers_1 = require("timers");
-const stream_1 = require("./stream");
 const util = require("./util");
 const defaultPollingInterval = 1000;
 const defaultQueryTimeout = 0;
@@ -24,19 +23,19 @@ class AthenaClient {
     }
     execute(query, callback) {
         const currentConfig = Object.assign({}, this.config);
-        const athenaStream = new stream_1.AthenaStream(currentConfig);
-        this._execute(query, athenaStream, currentConfig);
+        const csvTransform = new csv();
+        this._execute(query, csvTransform, currentConfig);
         if (callback !== undefined) {
             let isEnd = false;
             const records = [];
             let queryExecution;
-            athenaStream.on('data', (record) => {
+            csvTransform.on('data', (record) => {
                 records.push(record);
             });
-            athenaStream.on('query_end', (q) => {
+            csvTransform.on('query_end', (q) => {
                 queryExecution = q;
             });
-            athenaStream.on('end', (record) => {
+            csvTransform.on('end', (record) => {
                 if (isEnd) {
                     return;
                 }
@@ -46,7 +45,7 @@ class AthenaClient {
                 };
                 callback(undefined, result);
             });
-            athenaStream.on('error', (err) => {
+            csvTransform.on('error', (err) => {
                 isEnd = true;
                 callback(err);
             });
@@ -58,31 +57,31 @@ class AthenaClient {
                     return new Promise((resolve, reject) => {
                         const records = [];
                         let queryExecution;
-                        athenaStream.on('data', (record) => {
+                        csvTransform.on('data', (record) => {
                             records.push(record);
                         });
-                        athenaStream.on('query_end', (q) => {
+                        csvTransform.on('query_end', (q) => {
                             queryExecution = q;
                         });
-                        athenaStream.on('end', (record) => {
+                        csvTransform.on('end', (record) => {
                             const result = {
                                 records,
                                 queryExecution,
                             };
                             return resolve(result);
                         });
-                        athenaStream.on('error', (err) => {
+                        csvTransform.on('error', (err) => {
                             return reject(err);
                         });
                     });
                 },
                 toStream: () => {
-                    return athenaStream;
+                    return csvTransform;
                 },
             };
         }
     }
-    _execute(query, athenaStream, config) {
+    _execute(query, csvTransform, config) {
         return __awaiter(this, void 0, void 0, function* () {
             while (!this.canStartQuery()) {
                 yield util.sleep(config.execRightCheckInterval || defaultExecRightCheckInterval);
@@ -105,13 +104,12 @@ class AthenaClient {
                     throw new Error('query timeout');
                 }
                 queryExecution = yield this.request.getQueryExecution(queryId, config);
-                athenaStream.emit('query_end', queryExecution);
+                csvTransform.emit('query_end', queryExecution);
                 this.endQuery();
             }
             catch (err) {
                 this.endQuery();
-                athenaStream.emit('error', err);
-                athenaStream.end(new Buffer(''));
+                csvTransform.emit('error', err);
                 return;
             }
             try {
@@ -120,11 +118,10 @@ class AthenaClient {
                     throw new Error('query outputlocation is empty');
                 }
                 const resultsStream = this.request.getResultsStream(queryExecution.ResultConfiguration.OutputLocation);
-                resultsStream.pipe(new byline_1.LineStream()).pipe(athenaStream);
+                resultsStream.pipe(csvTransform);
             }
             catch (err) {
-                athenaStream.emit('error', err);
-                athenaStream.end(new Buffer(''));
+                csvTransform.emit('error', err);
                 return;
             }
         });
