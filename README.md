@@ -76,7 +76,6 @@ Returns a client instance attached to the account specified by the given clientC
 | pollingInterval      | 1000  |  Interval of polling sql results (ms) |
 | queryTimeout      | 0      | Timeout of query execution.  `0` is no timeout |
 | concurrentExecMax      | 5      | The number of cuncurrent execution of query max. It should be set `smaller than AWS Service limit`(default is 5) |
-| maxBufferSize     | '128M' | Maximum buffer when retrieving query results |
 
 #### `awsConfig` object properties
 | Property  | Default   | Description |

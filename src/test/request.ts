@@ -1,7 +1,6 @@
 import * as assert from 'assert'
 import * as fs from 'fs'
 import { AthenaRequest } from '../lib/request'
-import { AthenaStream } from '../lib/stream'
 
 const config = {
   bucketUri: 's3://xxxx',

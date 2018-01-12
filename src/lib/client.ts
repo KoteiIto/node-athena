@@ -1,9 +1,9 @@
 import { Athena } from 'aws-sdk'
 import { LineStream } from 'byline'
-import { Readable } from 'stream'
+import * as csv from 'csv-parser'
+import { Transform } from 'stream'
 import { setTimeout } from 'timers'
 import { AthenaRequest, AthenaRequestConfig } from './request'
-import { AthenaStream, AthenaStreamConfig } from './stream'
 import * as util from './util'
 
 export interface AthenaExecutionResult<T> {
@@ -13,12 +13,10 @@ export interface AthenaExecutionResult<T> {
 
 export interface AthenaExecutionSelect<T> {
   toPromise: () => Promise<AthenaExecutionResult<T>>
-  toStream: () => AthenaStream<T>
+  toStream: () => Transform
 }
 
-export interface AthenaClientConfig
-  extends AthenaRequestConfig,
-    AthenaStreamConfig {
+export interface AthenaClientConfig extends AthenaRequestConfig {
   pollingInterval?: number
   queryTimeout?: number
   concurrentExecMax?: number
@@ -52,8 +50,9 @@ export class AthenaClient {
   ) {
     // Execute
     const currentConfig = { ...this.config }
-    const athenaStream = new AthenaStream<T>(currentConfig)
-    this._execute(query, athenaStream, currentConfig)
+    const csvTransform = new csv()
+    // const athenaStream = new AthenaStream<T>(currentConfig)
+    this._execute(query, csvTransform, currentConfig)
 
     // Add event listener
     if (callback !== undefined) {
@@ -62,13 +61,13 @@ export class AthenaClient {
       let queryExecution: Athena.QueryExecution
 
       // Callback
-      athenaStream.on('data', (record: T) => {
+      csvTransform.on('data', (record: T) => {
         records.push(record)
       })
-      athenaStream.on('query_end', (q: Athena.QueryExecution) => {
+      csvTransform.on('query_end', (q: Athena.QueryExecution) => {
         queryExecution = q
       })
-      athenaStream.on('end', (record: T) => {
+      csvTransform.on('end', (record: T) => {
         if (isEnd) {
           return
         }
@@ -78,7 +77,7 @@ export class AthenaClient {
         }
         callback(undefined, result)
       })
-      athenaStream.on('error', (err: Error) => {
+      csvTransform.on('error', (err: Error) => {
         isEnd = true
         callback(err)
       })
@@ -92,35 +91,35 @@ export class AthenaClient {
             let queryExecution: Athena.QueryExecution
 
             // Add event listener for promise
-            athenaStream.on('data', (record: T) => {
+            csvTransform.on('data', (record: T) => {
               records.push(record)
             })
-            athenaStream.on('query_end', (q: Athena.QueryExecution) => {
+            csvTransform.on('query_end', (q: Athena.QueryExecution) => {
               queryExecution = q
             })
-            athenaStream.on('end', (record: T) => {
+            csvTransform.on('end', (record: T) => {
               const result: AthenaExecutionResult<T> = {
                 records,
                 queryExecution,
               }
               return resolve(result)
             })
-            athenaStream.on('error', (err: Error) => {
+            csvTransform.on('error', (err: Error) => {
               return reject(err)
             })
           })
         },
         // Stream
-        toStream: (): AthenaStream<T> => {
-          return athenaStream
+        toStream: (): Transform => {
+          return csvTransform
         },
       }
     }
   }
 
-  private async _execute<T>(
+  private async _execute(
     query: string,
-    athenaStream: AthenaStream<T>,
+    csvTransform: Transform,
     config: AthenaClientConfig,
   ) {
     // Limit the number of concurrent executions
@@ -159,13 +158,12 @@ export class AthenaClient {
 
       // Emit query_end event
       queryExecution = await this.request.getQueryExecution(queryId, config)
-      athenaStream.emit('query_end', queryExecution)
+      csvTransform.emit('query_end', queryExecution)
 
       this.endQuery()
     } catch (err) {
       this.endQuery()
-      athenaStream.emit('error', err)
-      athenaStream.end(new Buffer(''))
+      csvTransform.emit('error', err)
       return
     }
 
@@ -178,13 +176,12 @@ export class AthenaClient {
       ) {
         throw new Error('query outputlocation is empty')
       }
-      const resultsStream: Readable = this.request.getResultsStream(
+      const resultsStream = this.request.getResultsStream(
         queryExecution.ResultConfiguration.OutputLocation,
       )
-      resultsStream.pipe(new LineStream()).pipe(athenaStream)
+      resultsStream.pipe(csvTransform)
     } catch (err) {
-      athenaStream.emit('error', err)
-      athenaStream.end(new Buffer(''))
+      csvTransform.emit('error', err)
       return
     }
   }
