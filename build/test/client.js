@@ -110,6 +110,7 @@ describe('Array', () => {
                 const result = yield client.execute('query').toPromise();
                 assert.equal(result.records.length, 10);
                 assert.equal(result.records[2].name, 'hoge3');
+                assert.equal(result.records[3].name, 'ho,ge4');
                 assert.equal(result.records[7].id, '8');
                 assert.equal(result.queryExecution.QueryExecutionId, 'id');
                 resolve();
