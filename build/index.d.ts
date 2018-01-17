@@ -4,4 +4,5 @@ export interface AwsConfig {
     accessKeyId?: string;
     secretAccessKey?: string;
 }
+export * from './lib/client';
 export declare function createClient(clientConfig: AthenaClientConfig, awsConfig: AwsConfig): AthenaClient;

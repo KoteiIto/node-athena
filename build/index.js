@@ -1,8 +1,12 @@
 "use strict";
+function __export(m) {
+    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+}
 Object.defineProperty(exports, "__esModule", { value: true });
 const aws = require("aws-sdk");
 const client_1 = require("./lib/client");
 const request_1 = require("./lib/request");
+__export(require("./lib/client"));
 function createClient(clientConfig, awsConfig) {
     if (clientConfig === undefined ||
         clientConfig.bucketUri === undefined ||
