@@ -1,8 +1,8 @@
 import * as assert from 'assert'
-import * as athena from '../index'
+import athena from '../index'
 
 describe('Array', () => {
-  describe('#createClient()', () => {
+  describe('#createClient import defalut()', () => {
     it('should return athenaClient', (done: any) => {
       const client = athena.createClient(
         { bucketUri: 's3://xxxx' },

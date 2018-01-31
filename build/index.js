@@ -7,6 +7,10 @@ const aws = require("aws-sdk");
 const client_1 = require("./lib/client");
 const request_1 = require("./lib/request");
 __export(require("./lib/client"));
+class Athena {
+}
+Athena.createClient = createClient;
+exports.default = Athena;
 function createClient(clientConfig, awsConfig) {
     if (clientConfig === undefined ||
         clientConfig.bucketUri === undefined ||

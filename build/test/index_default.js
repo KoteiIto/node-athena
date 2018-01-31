@@ -1,14 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const assert = require("assert");
-const athena = require("../index");
+const index_1 = require("../index");
 describe('Array', () => {
-    describe('#createClient()', () => {
+    describe('#createClient import defalut()', () => {
         it('should return athenaClient', (done) => {
-            const client = athena.createClient({ bucketUri: 's3://xxxx' }, { region: 'xxxx' });
+            const client = index_1.default.createClient({ bucketUri: 's3://xxxx' }, { region: 'xxxx' });
             assert.notEqual(client, undefined);
             done();
         });
     });
 });
-//# sourceMappingURL=index.js.map
+//# sourceMappingURL=index_default.js.map
