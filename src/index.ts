@@ -10,6 +10,10 @@ export interface AwsConfig {
 
 export * from './lib/client'
 
+export default class Athena {
+  public static createClient = createClient
+}
+
 export function createClient(
   clientConfig: AthenaClientConfig,
   awsConfig: AwsConfig,
