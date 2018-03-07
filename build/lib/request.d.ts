@@ -5,6 +5,7 @@ export interface AthenaRequestConfig {
     baseRetryWait?: number;
     retryWaitMax?: number;
     retryCountMax?: number;
+    database?: string;
 }
 export declare class AthenaRequest {
     private athena;
