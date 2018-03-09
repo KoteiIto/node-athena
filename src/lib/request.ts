@@ -6,6 +6,7 @@ export interface AthenaRequestConfig {
   baseRetryWait?: number
   retryWaitMax?: number
   retryCountMax?: number
+  database?: string
 }
 
 const defaultBaseRetryWait = 200
@@ -26,6 +27,9 @@ export class AthenaRequest {
         QueryString: query,
         ResultConfiguration: {
           OutputLocation: config.bucketUri,
+        },
+        QueryExecutionContext: {
+          Database: config.database || 'default',
         },
       }
       const loopFunc = () => {

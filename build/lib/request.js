@@ -16,6 +16,9 @@ class AthenaRequest {
                 ResultConfiguration: {
                     OutputLocation: config.bucketUri,
                 },
+                QueryExecutionContext: {
+                    Database: config.database || 'default',
+                },
             };
             const loopFunc = () => {
                 this.athena.startQueryExecution(params, (err, data) => {
