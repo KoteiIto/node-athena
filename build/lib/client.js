@@ -13,13 +13,21 @@ const timers_1 = require("timers");
 const util = require("./util");
 const defaultPollingInterval = 1000;
 const defaultQueryTimeout = 0;
-const defaultConcurrentExecMax = 5;
 const defaultExecRightCheckInterval = 100;
+let concurrentExecMax = 5;
+let concurrentExecNum = 0;
+function setConcurrentExecMax(val) {
+    concurrentExecMax = val;
+}
+exports.setConcurrentExecMax = setConcurrentExecMax;
 class AthenaClient {
     constructor(request, config) {
         this.request = request;
         this.config = config;
-        this.concurrentExecNum = 0;
+        if (config.concurrentExecMax) {
+            console.warn(`[WARN] please use 'athena.setConcurrentExecMax()' instead 'clientConfig.concurrentExecMax'`);
+            concurrentExecMax = config.concurrentExecMax;
+        }
     }
     execute(query, callback) {
         const currentConfig = Object.assign({}, this.config);
@@ -127,14 +135,13 @@ class AthenaClient {
         });
     }
     canStartQuery() {
-        return (this.concurrentExecNum <
-            (this.config.concurrentExecMax || defaultConcurrentExecMax));
+        return concurrentExecNum < concurrentExecMax;
     }
     startQuery() {
-        this.concurrentExecNum = Math.min(this.concurrentExecNum + 1, this.config.concurrentExecMax || defaultConcurrentExecMax);
+        concurrentExecNum = Math.min(++concurrentExecNum, concurrentExecMax);
     }
     endQuery() {
-        this.concurrentExecNum = Math.max(this.concurrentExecNum - 1, 0);
+        concurrentExecNum = Math.max(--concurrentExecNum, 0);
     }
 }
 exports.AthenaClient = AthenaClient;

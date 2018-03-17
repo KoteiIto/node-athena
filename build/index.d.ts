@@ -1,4 +1,4 @@
-import { AthenaClient, AthenaClientConfig } from './lib/client';
+import { AthenaClient, AthenaClientConfig, setConcurrentExecMax } from './lib/client';
 export interface AwsConfig {
     region: string;
     accessKeyId?: string;
@@ -7,5 +7,6 @@ export interface AwsConfig {
 export * from './lib/client';
 export default class Athena {
     static createClient: typeof createClient;
+    setConcurrentExecMax: typeof setConcurrentExecMax;
 }
 export declare function createClient(clientConfig: AthenaClientConfig, awsConfig: AwsConfig): AthenaClient;

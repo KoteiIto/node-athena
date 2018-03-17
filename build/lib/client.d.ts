@@ -16,6 +16,7 @@ export interface AthenaClientConfig extends AthenaRequestConfig {
     concurrentExecMax?: number;
     execRightCheckInterval?: number;
 }
+export declare function setConcurrentExecMax(val: number): void;
 export declare class AthenaClient {
     private config;
     private concurrentExecNum;

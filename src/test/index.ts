@@ -12,4 +12,11 @@ describe('Array', () => {
       done()
     })
   })
+
+  describe('#setConcurrentExecMax()', () => {
+    it('should no error', (done: any) => {
+      athena.setConcurrentExecMax(10)
+      done()
+    })
+  })
 })
