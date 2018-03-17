@@ -16,7 +16,7 @@ export * from './lib/client'
 
 export default class Athena {
   public static createClient = createClient
-  public setConcurrentExecMax = setConcurrentExecMax
+  public static setConcurrentExecMax = setConcurrentExecMax
 }
 
 export function createClient(
