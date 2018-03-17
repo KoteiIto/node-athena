@@ -7,6 +7,6 @@ export interface AwsConfig {
 export * from './lib/client';
 export default class Athena {
     static createClient: typeof createClient;
-    setConcurrentExecMax: typeof setConcurrentExecMax;
+    static setConcurrentExecMax: typeof setConcurrentExecMax;
 }
 export declare function createClient(clientConfig: AthenaClientConfig, awsConfig: AwsConfig): AthenaClient;
