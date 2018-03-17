@@ -1,6 +1,6 @@
 {
   "name": "athena-client",
-  "version": "2.3.0",
+  "version": "2.3.1",
   "description": "a nodejs simple aws athena client",
   "homepage": "https://github.com/KoteiIto/node-athena",
   "repository": {
