@@ -10,5 +10,11 @@ describe('Array', () => {
             done();
         });
     });
+    describe('#setConcurrentExecMax()', () => {
+        it('should no error', (done) => {
+            athena.setConcurrentExecMax(10);
+            done();
+        });
+    });
 });
 //# sourceMappingURL=index.js.map

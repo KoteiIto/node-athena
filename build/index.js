@@ -8,6 +8,9 @@ const client_1 = require("./lib/client");
 const request_1 = require("./lib/request");
 __export(require("./lib/client"));
 class Athena {
+    constructor() {
+        this.setConcurrentExecMax = client_1.setConcurrentExecMax;
+    }
 }
 Athena.createClient = createClient;
 exports.default = Athena;

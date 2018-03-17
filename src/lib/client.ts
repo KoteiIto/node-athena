@@ -25,8 +25,14 @@ export interface AthenaClientConfig extends AthenaRequestConfig {
 
 const defaultPollingInterval = 1000
 const defaultQueryTimeout = 0
-const defaultConcurrentExecMax = 5
 const defaultExecRightCheckInterval = 100
+
+let concurrentExecMax = 5
+let concurrentExecNum = 0
+
+export function setConcurrentExecMax(val: number) {
+  concurrentExecMax = val
+}
 
 export class AthenaClient {
   private config: AthenaClientConfig
@@ -35,7 +41,12 @@ export class AthenaClient {
   constructor(request: AthenaRequest, config: AthenaClientConfig) {
     this.request = request
     this.config = config
-    this.concurrentExecNum = 0
+    if (config.concurrentExecMax) {
+      console.warn(
+        `[WARN] please use 'athena.setConcurrentExecMax()' instead 'clientConfig.concurrentExecMax'`,
+      )
+      concurrentExecMax = config.concurrentExecMax
+    }
   }
 
   public execute<T>(query: string): AthenaExecutionSelect<T>
@@ -187,20 +198,14 @@ export class AthenaClient {
   }
 
   private canStartQuery() {
-    return (
-      this.concurrentExecNum <
-      (this.config.concurrentExecMax || defaultConcurrentExecMax)
-    )
+    return concurrentExecNum < concurrentExecMax
   }
 
   private startQuery() {
-    this.concurrentExecNum = Math.min(
-      this.concurrentExecNum + 1,
-      this.config.concurrentExecMax || defaultConcurrentExecMax,
-    )
+    concurrentExecNum = Math.min(++concurrentExecNum, concurrentExecMax)
   }
 
   private endQuery() {
-    this.concurrentExecNum = Math.max(this.concurrentExecNum - 1, 0)
+    concurrentExecNum = Math.max(--concurrentExecNum, 0)
   }
 }

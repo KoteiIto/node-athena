@@ -64,10 +64,13 @@ stream.on('error', function(e) {
 
 # API
 ### athena = require("athena-client")
-This module exposes the `createClient` method, which execute query to AWS Athena
+This module exposes the `createClient` and `setConcurrentExecMax` method, which execute query to AWS Athena
 
 ### client = athena.createClient([_clientConfig_], [_awsConfig_])
 Returns a client instance attached to the account specified by the given clientConfig and awsConfig.
+
+### athena.setConcurrentExecMax([_concurrentExecMax_])
+Set the number of cuncurrent execution of query max. It should be set `smaller than AWS Service limit`(default is 5)
 
 #### `clientConfig` object properties
 | Property  | Default   | Description |
@@ -75,7 +78,6 @@ Returns a client instance attached to the account specified by the given clientC
 | bucketUri      | __Required__ | URI of S3 bucket for saving a query results file(*.csv) and a metadata file (*.csv.metadata) |
 | pollingInterval      | 1000  |  Interval of polling sql results (ms) |
 | queryTimeout      | 0      | Timeout of query execution.  `0` is no timeout |
-| concurrentExecMax      | 5      | The number of cuncurrent execution of query max. It should be set `smaller than AWS Service limit`(default is 5) |
 
 #### `awsConfig` object properties
 | Property  | Default   | Description |

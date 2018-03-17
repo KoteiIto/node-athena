@@ -1,5 +1,9 @@
 import * as aws from 'aws-sdk'
-import { AthenaClient, AthenaClientConfig } from './lib/client'
+import {
+  AthenaClient,
+  AthenaClientConfig,
+  setConcurrentExecMax,
+} from './lib/client'
 import { AthenaRequest } from './lib/request'
 
 export interface AwsConfig {
@@ -12,6 +16,7 @@ export * from './lib/client'
 
 export default class Athena {
   public static createClient = createClient
+  public setConcurrentExecMax = setConcurrentExecMax
 }
 
 export function createClient(
