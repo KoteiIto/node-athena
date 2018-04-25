@@ -28,7 +28,7 @@ export function createClient(
     clientConfig.bucketUri === undefined ||
     clientConfig.bucketUri.length === 0
   ) {
-    throw new Error('buket uri required')
+    throw new Error('bucket uri required')
   }
 
   if (
