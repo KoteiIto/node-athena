@@ -40,7 +40,8 @@ client.execute('SELECT 1', function(err, data) {
 client.execute('SELECT 1').toPromise()
 .then(function(data) {
     console.log(data)
-}).catch(function(err) {
+})
+.catch(function(err) {
     console.error(err)
 })
 ```
@@ -64,18 +65,18 @@ stream.on('error', function(e) {
 
 # API
 ### athena = require("athena-client")
-This module exposes the `createClient` and `setConcurrentExecMax` method, which execute query to AWS Athena
+This module exposes the `createClient` and `setConcurrentExecMax` method, which execute query to AWS Athena.
 
 ### client = athena.createClient([_clientConfig_], [_awsConfig_])
-Returns a client instance attached to the account specified by the given clientConfig and awsConfig.
+Returns a client instance attached to the account specified by the given `clientConfig` and `awsConfig`.
 
 ### athena.setConcurrentExecMax([_concurrentExecMax_])
-Set the number of cuncurrent execution of query max. It should be set `smaller than AWS Service limit`(default is 5)
+Set the number of cuncurrent execution of query max. It should be set `smaller than AWS Service limit` (default is 5).
 
 #### `clientConfig` object properties
 | Property  | Default   | Description |
 |-----------|-----------|-------------|
-| bucketUri      | __Required__ | URI of S3 bucket for saving a query results file(*.csv) and a metadata file (*.csv.metadata) |
+| bucketUri      | __Required__ | URI of S3 bucket for saving a query results file (*.csv) and a metadata file (*.csv.metadata) |
 | pollingInterval      | 1000  |  Interval of polling sql results (ms) |
 | queryTimeout      | 0      | Timeout of query execution.  `0` is no timeout |
 
@@ -83,12 +84,12 @@ Set the number of cuncurrent execution of query max. It should be set `smaller t
 | Property  | Default   | Description |
 |-----------|-----------|-------------|
 | region        | __Required__ | Your Athena and S3 region |
-| accessKeyId      | undifined  | Your IAM accessKeyId. This is optional |
-| secretAccessKey      | undifined | Your IAM secretAccessKey. This is optional |
+| accessKeyId      | undefined  | Your IAM `accessKeyId`, optional |
+| secretAccessKey      | undefined | Your IAM `secretAccessKey`, optional |
 
 ### client.execute([_query_], [_callback_])
 It will return the following result.
-If you want to know more about params of `queryExecution`, please refer to the aws-sdk [document](https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/Athena.html#getQueryExecution-property)  
+If you want to know more about params of `queryExecution`, please refer to the `aws-sdk` [document](https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/Athena.html#getQueryExecution-property)  
 
 ```json
 {
@@ -115,10 +116,10 @@ If you want to know more about params of `queryExecution`, please refer to the a
 ```
 
 ### client.execute([_query_]).toPromise()
-It will return promise object to get result.
+Returns a `Promise` that resolves the result of your query.
 
 ### client.execute([_query_]).toStream()
-It will return stream object to get result. If your query results are very `large`, we recommend using this stream. 
+Returns a `Stream` to buffer the results of your query. This method is recommended for **large** result sets.
 
 ```js
 // Get record one by one
