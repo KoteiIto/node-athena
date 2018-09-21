@@ -1,4 +1,6 @@
 import { Athena, AWSError } from 'aws-sdk'
+import { ResultConfiguration } from 'aws-sdk/clients/athena'
+import { EncryptionConfiguration } from 'aws-sdk/clients/glue'
 import { Readable } from 'stream'
 
 export interface AthenaRequestConfig {
@@ -7,6 +9,28 @@ export interface AthenaRequestConfig {
   retryWaitMax?: number
   retryCountMax?: number
   database?: string
+  encryptionOption?: string
+  encryptionKmsKey?: string
+}
+
+interface EncryptionConfigurationParam {
+  EncryptionOption: string
+  KmsKey?: string
+}
+
+interface ResultConfigurationParam {
+  OutputLocation: string
+  EncryptionConfiguration?: EncryptionConfigurationParam
+}
+
+interface QueryExecutionContextParam {
+  Database: string
+}
+
+interface AthenaRequestParams {
+  QueryString: string
+  ResultConfiguration: ResultConfigurationParam
+  QueryExecutionContext: QueryExecutionContextParam
 }
 
 const defaultBaseRetryWait = 200
@@ -23,10 +47,18 @@ export class AthenaRequest {
   public startQuery(query: string, config: AthenaRequestConfig) {
     return new Promise<string>((resolve, reject) => {
       let retryCount = 0
-      const params = {
+      const params: AthenaRequestParams = {
         QueryString: query,
         ResultConfiguration: {
           OutputLocation: config.bucketUri,
+          ...(config.encryptionOption && {
+            EncryptionConfiguration: {
+              EncryptionOption: config.encryptionOption,
+              ...(config.encryptionKmsKey && {
+                KmsKey: config.encryptionKmsKey,
+              }),
+            },
+          }),
         },
         QueryExecutionContext: {
           Database: config.database || 'default',

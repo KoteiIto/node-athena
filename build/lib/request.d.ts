@@ -6,6 +6,8 @@ export interface AthenaRequestConfig {
     retryWaitMax?: number;
     retryCountMax?: number;
     database?: string;
+    encryptionOption?: string;
+    encryptionKmsKey?: string;
 }
 export declare class AthenaRequest {
     private athena;

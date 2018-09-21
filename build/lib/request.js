@@ -13,9 +13,11 @@ class AthenaRequest {
             let retryCount = 0;
             const params = {
                 QueryString: query,
-                ResultConfiguration: {
-                    OutputLocation: config.bucketUri,
-                },
+                ResultConfiguration: Object.assign({ OutputLocation: config.bucketUri }, (config.encryptionOption && {
+                    EncryptionConfiguration: Object.assign({ EncryptionOption: config.encryptionOption }, (config.encryptionKmsKey && {
+                        KmsKey: config.encryptionKmsKey,
+                    })),
+                })),
                 QueryExecutionContext: {
                     Database: config.database || 'default',
                 },

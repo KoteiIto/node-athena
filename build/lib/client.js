@@ -28,6 +28,11 @@ class AthenaClient {
             console.warn(`[WARN] please use 'athena.setConcurrentExecMax()' instead 'clientConfig.concurrentExecMax'`);
             concurrentExecMax = config.concurrentExecMax;
         }
+        if ((config.encryptionOption === 'SSE_KMS' ||
+            config.encryptionOption === 'CSE_KMS') &&
+            config.encryptionKmsKey === undefined) {
+            throw new Error('KMS key required');
+        }
     }
     execute(query, callback) {
         const currentConfig = Object.assign({}, this.config);

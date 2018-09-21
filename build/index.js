@@ -16,7 +16,7 @@ function createClient(clientConfig, awsConfig) {
     if (clientConfig === undefined ||
         clientConfig.bucketUri === undefined ||
         clientConfig.bucketUri.length === 0) {
-        throw new Error('buket uri required');
+        throw new Error('bucket uri required');
     }
     if (awsConfig === undefined ||
         awsConfig.region === undefined ||

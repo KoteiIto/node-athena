@@ -47,6 +47,13 @@ export class AthenaClient {
       )
       concurrentExecMax = config.concurrentExecMax
     }
+    if (
+      (config.encryptionOption === 'SSE_KMS' ||
+        config.encryptionOption === 'CSE_KMS') &&
+      config.encryptionKmsKey === undefined
+    ) {
+      throw new Error('KMS key required')
+    }
   }
 
   public execute<T>(query: string): AthenaExecutionSelect<T>
@@ -157,7 +164,7 @@ export class AthenaClient {
       }
 
       // Wait for timeout or query success
-      while (!isTimeout && !await this.request.checkQuery(queryId, config)) {
+      while (!isTimeout && !(await this.request.checkQuery(queryId, config))) {
         await util.sleep(config.pollingInterval || defaultPollingInterval)
       }
 
