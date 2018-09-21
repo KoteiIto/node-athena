@@ -142,6 +142,23 @@ describe('Array', () => {
       }).then(done)
     })
 
+    it('should return queryid when success to startQuery with encryption', (done: any) => {
+      new Promise((resolve: any) => {
+        const mockAthena = getMockAthena()
+        const mockS3 = getMockS3()
+        const request = new AthenaRequest(mockAthena, mockS3)
+        const configWithEncryption = {
+          ...config,
+          encryptionOption: 'SSE_KMS',
+          encryptionKmsKey: 'arn:xxxx:xxxx',
+        }
+        request.startQuery('query', configWithEncryption).then((data: any) => {
+          assert.equal(data, 'queryid')
+          return resolve()
+        })
+      }).then(done)
+    })
+
     it('should retry when get ThrottlingException', (done: any) => {
       new Promise((resolve: any) => {
         const mockAthena = getMockAthena()

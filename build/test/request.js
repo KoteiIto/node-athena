@@ -108,6 +108,18 @@ describe('Array', () => {
                 });
             }).then(done);
         });
+        it('should return queryid when success to startQuery with encryption', (done) => {
+            new Promise((resolve) => {
+                const mockAthena = getMockAthena();
+                const mockS3 = getMockS3();
+                const request = new request_1.AthenaRequest(mockAthena, mockS3);
+                const configWithEncryption = Object.assign({}, config, { encryptionOption: 'SSE_KMS', encryptionKmsKey: 'arn:xxxx:xxxx' });
+                request.startQuery('query', configWithEncryption).then((data) => {
+                    assert.equal(data, 'queryid');
+                    return resolve();
+                });
+            }).then(done);
+        });
         it('should retry when get ThrottlingException', (done) => {
             new Promise((resolve) => {
                 const mockAthena = getMockAthena();
