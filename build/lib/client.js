@@ -125,17 +125,23 @@ class AthenaClient {
                 csvTransform.emit('error', err);
                 return;
             }
-            try {
-                if (!queryExecution.ResultConfiguration ||
-                    !queryExecution.ResultConfiguration.OutputLocation) {
-                    throw new Error('query outputlocation is empty');
-                }
-                const resultsStream = this.request.getResultsStream(queryExecution.ResultConfiguration.OutputLocation);
-                resultsStream.pipe(csvTransform);
-            }
-            catch (err) {
-                csvTransform.emit('error', err);
+            if (config.skipFetchResult) {
+                csvTransform.end();
                 return;
+            }
+            else {
+                try {
+                    if (!queryExecution.ResultConfiguration ||
+                        !queryExecution.ResultConfiguration.OutputLocation) {
+                        throw new Error('query outputlocation is empty');
+                    }
+                    const resultsStream = this.request.getResultsStream(queryExecution.ResultConfiguration.OutputLocation);
+                    resultsStream.pipe(csvTransform);
+                }
+                catch (err) {
+                    csvTransform.emit('error', err);
+                    return;
+                }
             }
         });
     }

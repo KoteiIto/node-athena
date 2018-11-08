@@ -15,6 +15,7 @@ export interface AthenaClientConfig extends AthenaRequestConfig {
     queryTimeout?: number;
     concurrentExecMax?: number;
     execRightCheckInterval?: number;
+    skipFetchResult?: boolean;
 }
 export declare function setConcurrentExecMax(val: number): void;
 export declare class AthenaClient {
