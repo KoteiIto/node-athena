@@ -15,6 +15,7 @@ export interface AthenaClientConfig extends AthenaRequestConfig {
     queryTimeout?: number;
     concurrentExecMax?: number;
     execRightCheckInterval?: number;
+    skipFetchResult?: boolean;
 }
 export declare function setConcurrentExecMax(val: number): void;
 export declare class AthenaClient {
@@ -24,8 +25,8 @@ export declare class AthenaClient {
     constructor(request: AthenaRequest, config: AthenaClientConfig);
     execute<T>(query: string): AthenaExecutionSelect<T>;
     execute<T>(query: string, callback: (err?: Error, result?: AthenaExecutionResult<T>) => void): void;
-    private _execute;
-    private canStartQuery;
-    private startQuery;
-    private endQuery;
+    private _execute(query, csvTransform, config);
+    private canStartQuery();
+    private startQuery();
+    private endQuery();
 }

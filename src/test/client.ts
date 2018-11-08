@@ -1,6 +1,5 @@
 import * as assert from 'assert'
 import * as fs from 'fs'
-import { Readable } from 'stream'
 import { AthenaClient, AthenaExecutionResult } from '../lib/client'
 import { AthenaRequest, AthenaRequestConfig } from '../lib/request'
 
@@ -363,6 +362,21 @@ describe('Array', () => {
         assert.equal(data, null)
         done()
       })
+    })
+
+    it('should return empty records when skipFetchRecord is true', (done: any) => {
+      const mockReqest = getMockRequest()
+      const client = new AthenaClient(mockReqest, {
+        ...config,
+        skipFetchResult: true,
+      })
+      client.execute(
+        'query',
+        (err: Error, data: AthenaExecutionResult<any>) => {
+          assert.equal(data.records.length, 0)
+          done()
+        },
+      )
     })
   })
 })

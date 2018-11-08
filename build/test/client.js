@@ -307,6 +307,14 @@ describe('Array', () => {
                 done();
             });
         });
+        it('should return empty records when skipFetchRecord is true', (done) => {
+            const mockReqest = getMockRequest();
+            const client = new client_1.AthenaClient(mockReqest, Object.assign({}, config, { skipFetchResult: true }));
+            client.execute('query', (err, data) => {
+                assert.equal(data.records.length, 0);
+                done();
+            });
+        });
     });
 });
 //# sourceMappingURL=client.js.map

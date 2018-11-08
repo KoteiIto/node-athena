@@ -1,6 +1,5 @@
 import { Athena, AWSError } from 'aws-sdk'
 import { ResultConfiguration } from 'aws-sdk/clients/athena'
-import { EncryptionConfiguration } from 'aws-sdk/clients/glue'
 import { Readable } from 'stream'
 
 export interface AthenaRequestConfig {
