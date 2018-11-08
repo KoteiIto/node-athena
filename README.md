@@ -86,7 +86,9 @@ Set the number of cuncurrent execution of query max. It should be set `smaller t
 | execRightCheckInterval | 100 | Optional. Timeout when number of maximum concurrent requests is exceeded |
 | encryptionOption | undefined | Optional. Indicates the S3 encryption option used to encrypt the query results. Possible values include: `SSE_S3`, `SSE_KMS`, or `CSE_KMS` |
 | encryptionKmsKey | undefined | Optional but required if `encryptionOption` is set to `SSE_KMS` or `CSE_KMS`. Value is the KMS key ARN or ID |
+| skipFetchResult | false | Optional.　If true, do not return the result of the query when the athena query is finished. This option is used for [CTAS](https://docs.aws.amazon.com/athena/latest/ug/ctas.html) |
 | concurrentExecMax | 5 | DEPRECATED. Use `athena.setConcurrentExecMax()` instead |
+
 
 #### `awsConfig` object properties
 | Property  | Default   | Description |

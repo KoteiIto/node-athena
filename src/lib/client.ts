@@ -1,5 +1,4 @@
 import { Athena } from 'aws-sdk'
-import { LineStream } from 'byline'
 import * as csv from 'csv-parser'
 import { Transform } from 'stream'
 import { setTimeout } from 'timers'
@@ -21,6 +20,7 @@ export interface AthenaClientConfig extends AthenaRequestConfig {
   queryTimeout?: number
   concurrentExecMax?: number
   execRightCheckInterval?: number
+  skipFetchResult?: boolean
 }
 
 const defaultPollingInterval = 1000
@@ -185,22 +185,27 @@ export class AthenaClient {
       return
     }
 
-    // S3
-    try {
-      // Get result from s3
-      if (
-        !queryExecution.ResultConfiguration ||
-        !queryExecution.ResultConfiguration.OutputLocation
-      ) {
-        throw new Error('query outputlocation is empty')
-      }
-      const resultsStream = this.request.getResultsStream(
-        queryExecution.ResultConfiguration.OutputLocation,
-      )
-      resultsStream.pipe(csvTransform)
-    } catch (err) {
-      csvTransform.emit('error', err)
+    if (config.skipFetchResult) {
+      csvTransform.end()
       return
+    } else {
+      // S3
+      try {
+        // Get result from s3
+        if (
+          !queryExecution.ResultConfiguration ||
+          !queryExecution.ResultConfiguration.OutputLocation
+        ) {
+          throw new Error('query outputlocation is empty')
+        }
+        const resultsStream = this.request.getResultsStream(
+          queryExecution.ResultConfiguration.OutputLocation,
+        )
+        resultsStream.pipe(csvTransform)
+      } catch (err) {
+        csvTransform.emit('error', err)
+        return
+      }
     }
   }
 

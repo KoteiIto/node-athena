@@ -1,6 +1,6 @@
 {
   "name": "athena-client",
-  "version": "2.3.3",
+  "version": "2.4.0",
   "description": "a nodejs simple aws athena client",
   "homepage": "https://github.com/KoteiIto/node-athena",
   "repository": {
@@ -41,7 +41,6 @@
   ],
   "author": "KoteiIto",
   "devDependencies": {
-    "@types/byline": "^4.2.31",
     "@types/mocha": "^2.2.45",
     "@types/node": "^8.5.2",
     "coveralls": "^3.0.0",
@@ -59,7 +58,6 @@
   },
   "dependencies": {
     "aws-sdk": "^2.175.0",
-    "byline": "^5.0.0",
     "csv-parser": "^1.12.0",
     "typescript-collections": "^1.2.5"
   }
