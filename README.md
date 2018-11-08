@@ -77,15 +77,23 @@ Set the number of cuncurrent execution of query max. It should be set `smaller t
 | Property  | Default   | Description |
 |-----------|-----------|-------------|
 | bucketUri      | __Required__ | URI of S3 bucket for saving a query results file (*.csv) and a metadata file (*.csv.metadata) |
-| pollingInterval      | 1000  |  Interval of polling sql results (ms) |
-| queryTimeout      | 0      | Timeout of query execution.  `0` is no timeout |
+| pollingInterval      | 1000  |  Optional. Interval of polling sql results (ms) |
+| queryTimeout      | 0      | Optional. Timeout of query execution.  `0` is no timeout |
+| database | 'default' | Optional. The name of the database within which the query executes |
+| baseRetryWait | 200 | Optional. Used to calculate retry timeout for a particular query execution request |
+| retryWaitMax | 10000 | Optional. Maximum retry timeout for starting a new query execution |
+| retryCountMax | 10 | Optional. Maximum number of retry attempts for a particular query execution request |
+| execRightCheckInterval | 100 | Optional. Timeout when number of maximum concurrent requests is exceeded |
+| encryptionOption | undefined | Optional. Indicates the S3 encryption option used to encrypt the query results. Possible values include: `SSE_S3`, `SSE_KMS`, or `CSE_KMS` |
+| encryptionKmsKey | undefined | Optional but required if `encryptionOption` is set to `SSE_KMS` or `CSE_KMS`. Value is the KMS key ARN or ID |
+| concurrentExecMax | 5 | DEPRECATED. Use `athena.setConcurrentExecMax()` instead |
 
 #### `awsConfig` object properties
 | Property  | Default   | Description |
 |-----------|-----------|-------------|
 | region        | __Required__ | Your Athena and S3 region |
-| accessKeyId      | undefined  | Your IAM `accessKeyId`, optional |
-| secretAccessKey      | undefined | Your IAM `secretAccessKey`, optional |
+| accessKeyId      | undefined  | Optional. Your IAM `accessKeyId` |
+| secretAccessKey      | undefined | Optional. Your IAM `secretAccessKey` |
 
 ### client.execute([_query_], [_callback_])
 It will return the following result.
