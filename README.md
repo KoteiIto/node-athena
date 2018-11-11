@@ -96,6 +96,7 @@ Set the number of cuncurrent execution of query max. It should be set `smaller t
 | region        | __Required__ | Your Athena and S3 region |
 | accessKeyId      | undefined  | Optional. Your IAM `accessKeyId` |
 | secretAccessKey      | undefined | Optional. Your IAM `secretAccessKey` |
+| sessionToken         | undefined | Optional. Used with AWS.STS |
 
 ### client.execute([_query_], [_callback_])
 It will return the following result.
