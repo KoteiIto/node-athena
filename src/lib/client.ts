@@ -164,7 +164,7 @@ export class AthenaClient {
       }
 
       // Wait for timeout or query success
-      while (!isTimeout && !await this.request.checkQuery(queryId, config)) {
+      while (!isTimeout && !(await this.request.checkQuery(queryId, config))) {
         await util.sleep(config.pollingInterval || defaultPollingInterval)
       }
 
