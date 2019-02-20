@@ -88,7 +88,7 @@ Set the number of cuncurrent execution of query max. It should be set `smaller t
 | encryptionKmsKey | undefined | Optional but required if `encryptionOption` is set to `SSE_KMS` or `CSE_KMS`. Value is the KMS key ARN or ID |
 | skipFetchResult | false | Optional.　If true, do not return the result of the query when the athena query is finished. This option is used for [CTAS](https://docs.aws.amazon.com/athena/latest/ug/ctas.html) |
 | concurrentExecMax | 5 | DEPRECATED. Use `athena.setConcurrentExecMax()` instead |
-
+| workGroup | 'primary' | Optional. The name of the workgroup within which the query executes
 
 #### `awsConfig` object properties
 | Property  | Default   | Description |
