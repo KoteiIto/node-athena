@@ -25,8 +25,8 @@ export declare class AthenaClient {
     constructor(request: AthenaRequest, config: AthenaClientConfig);
     execute<T>(query: string): AthenaExecutionSelect<T>;
     execute<T>(query: string, callback: (err?: Error, result?: AthenaExecutionResult<T>) => void): void;
-    private _execute(query, csvTransform, config);
-    private canStartQuery();
-    private startQuery();
-    private endQuery();
+    private _execute;
+    private canStartQuery;
+    private startQuery;
+    private endQuery;
 }
