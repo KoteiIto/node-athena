@@ -10,6 +10,7 @@ export interface AthenaRequestConfig {
   database?: string
   encryptionOption?: string
   encryptionKmsKey?: string
+  workGroup?: string
 }
 
 interface EncryptionConfigurationParam {
@@ -30,6 +31,7 @@ interface AthenaRequestParams {
   QueryString: string
   ResultConfiguration: ResultConfigurationParam
   QueryExecutionContext: QueryExecutionContextParam
+  WorkGroup: string
 }
 
 const defaultBaseRetryWait = 200
@@ -62,6 +64,7 @@ export class AthenaRequest {
         QueryExecutionContext: {
           Database: config.database || 'default',
         },
+        WorkGroup: config.workGroup || 'primary',
       }
       const loopFunc = () => {
         this.athena.startQueryExecution(params, (err: AWSError, data: any) => {
