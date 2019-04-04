@@ -8,6 +8,7 @@ export interface AthenaRequestConfig {
     database?: string;
     encryptionOption?: string;
     encryptionKmsKey?: string;
+    workGroup?: string;
 }
 export declare class AthenaRequest {
     private athena;
