@@ -5,6 +5,7 @@ athena-client - a  simple aws athena client for nodejs and typescript
 ===========================
 This is version 2.x document. 1.x document is [here](https://github.com/KoteiIto/node-athena/tree/1.x)
 
+
 Install with:
 
     npm install athena-client
