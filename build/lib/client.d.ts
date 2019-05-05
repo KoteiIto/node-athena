@@ -1,4 +1,3 @@
-/// <reference types="node" />
 import { Athena } from 'aws-sdk';
 import { Transform } from 'stream';
 import { AthenaRequest, AthenaRequestConfig } from './request';

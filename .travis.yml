@@ -1,10 +1,11 @@
 language: node_js
 node_js:
+- '12'
+- '11'
+- '10'
 - '9'
 - '8'
 - '7'
 - '6'
-- '5'
-- '4'
 script: 'make test'
 after_success: 'make coveralls; make clean'

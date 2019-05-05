@@ -11,20 +11,20 @@
   "types": "build/index.d.ts",
   "typings": "build/index.d.ts",
   "scripts": {
-    "pretest": "yarn build",
+    "pretest": "npm run build",
     "test": "rm -rf coverage && istanbul cover _mocha -- -R spec build/test/*.js",
     "posttest": "cd coverage && remap-istanbul -i coverage.json -o html-report -t html",
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
     "fmt": "tslint -c tslint.json 'src/**/*.ts' --fix",
-    "prebuild": "yarn fmt",
+    "prebuild": "npm run fmt",
     "build": "rm -rf build && tsc",
-    "watch": "onchange 'src/**/*.ts' -- yarn build",
+    "watch": "onchange 'src/**/*.ts' -- npm run build",
     "precommit": "lint-staged",
     "coveralls": "cat ./coverage/lcov.info | coveralls"
   },
   "lint-staged": {
     "src/**/*.ts": [
-      "yarn fmt",
+      "npm run fmt",
       "git add"
     ]
   },
@@ -41,24 +41,24 @@
   ],
   "author": "KoteiIto",
   "devDependencies": {
-    "@types/mocha": "^2.2.45",
-    "@types/node": "^8.5.2",
-    "coveralls": "^3.0.0",
-    "husky": "^0.14.3",
+    "@types/mocha": "^5.2.6",
+    "@types/node": "^12.0.0",
+    "coveralls": "^3.0.3",
+    "husky": "^2.2.0",
     "istanbul": "^0.4.5",
-    "lint-staged": "^6.0.0",
-    "mocha": "^4.1.0",
-    "onchange": "^3.3.0",
-    "prettier": "^1.9.2",
-    "remap-istanbul": "^0.9.5",
-    "tslint": "^5.8.0",
-    "tslint-eslint-rules": "^4.1.1",
-    "tslint-plugin-prettier": "^1.3.0",
-    "typescript": "^2.6.2"
+    "lint-staged": "^8.1.6",
+    "mocha": "^6.1.4",
+    "onchange": "^5.2.0",
+    "prettier": "^1.17.0",
+    "remap-istanbul": "^0.13.0",
+    "tslint": "^5.16.0",
+    "tslint-eslint-rules": "^5.4.0",
+    "tslint-plugin-prettier": "^2.0.1",
+    "typescript": "^2.9.2",
+    "typescript-collections": "^1.3.2"
   },
   "dependencies": {
-    "aws-sdk": "^2.175.0",
-    "csv-parser": "^1.12.0",
-    "typescript-collections": "^1.2.5"
+    "aws-sdk": "^2.449.0",
+    "csv-parser": "^1.12.1"
   }
 }

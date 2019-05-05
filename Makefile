@@ -1,11 +1,11 @@
 build: clean
-	yarn run build
+	npm run build
 
 test:
-	yarn run test
+	npm test
 
 coveralls: 
-	yarn coveralls
+	npm run coveralls
 
 clean:
 	rm -rf build | rm -rf coverage
