@@ -12,7 +12,7 @@ class Athena {
 Athena.createClient = createClient;
 Athena.setConcurrentExecMax = client_1.setConcurrentExecMax;
 exports.default = Athena;
-function createClient(clientConfig, awsConfig) {
+function createClient(clientConfig, awsConfig, awsSdkInstances) {
     if (clientConfig === undefined ||
         clientConfig.bucketUri === undefined ||
         clientConfig.bucketUri.length === 0) {
@@ -24,8 +24,9 @@ function createClient(clientConfig, awsConfig) {
         throw new Error('region required');
     }
     aws.config.update(awsConfig);
-    const athena = new aws.Athena({ apiVersion: '2017-05-18' });
-    const s3 = new aws.S3({ apiVersion: '2006-03-01' });
+    const sdk = awsSdkInstances || {};
+    const athena = sdk.athena || new aws.Athena({ apiVersion: '2017-05-18' });
+    const s3 = sdk.s3 || new aws.S3({ apiVersion: '2006-03-01' });
     const request = new request_1.AthenaRequest(athena, s3);
     return new client_1.AthenaClient(request, clientConfig);
 }
