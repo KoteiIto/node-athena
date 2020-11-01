@@ -12,7 +12,7 @@ export interface AthenaExecutionResult<T> {
 
 export interface AthenaExecutionSelect<T> {
   toPromise: () => Promise<AthenaExecutionResult<T>>
-  toStream: () => Transform
+  toStream: () => Transform & AsyncIterable<T>
 }
 
 export interface AthenaClientConfig extends AthenaRequestConfig {
